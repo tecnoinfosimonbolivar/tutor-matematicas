@@ -1,4 +1,6 @@
 import React from 'react';
+// Importamos la imagen subiendo dos niveles (../../) para llegar a la raíz donde está tu ESCUDO.png
+import escudoImg from '../../ESCUDO.png'; 
 
 interface EscudoProps {
   className?: string;
@@ -13,11 +15,10 @@ export const EscudoInstitucional: React.FC<EscudoProps> = ({ className = '', siz
       title="Escudo Institución Educativa Técnica Simón Bolívar - Ibagué"
     >
       <img 
-        src="/ESCUDO.png" // Apunta directamente a la carpeta public en producción
+        src={escudoImg} // Usamos la variable de la imagen importada
         alt="Escudo Institución Educativa Técnica Simón Bolívar" 
         className="w-full h-full object-contain"
       />
     </div>
   );
 };
-
