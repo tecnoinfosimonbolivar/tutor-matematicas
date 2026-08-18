@@ -1,6 +1,4 @@
 import React from 'react';
-// IMPORTANTE: Importamos la imagen usando la ruta relativa correcta desde 'components/' hacia 'src/'
-import escudoImg from '../ESCUDO.png'; 
 
 interface EscudoProps {
   className?: string;
@@ -15,7 +13,7 @@ export const EscudoInstitucional: React.FC<EscudoProps> = ({ className = '', siz
       title="Escudo Institución Educativa Técnica Simón Bolívar - Ibagué"
     >
       <img 
-        src={escudoImg} // Pasamos la variable que contiene la imagen procesada por Vite
+        src="/ESCUDO.png" // Apunta directamente a la carpeta public en producción
         alt="Escudo Institución Educativa Técnica Simón Bolívar" 
         className="w-full h-full object-contain"
       />
