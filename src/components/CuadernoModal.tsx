@@ -1,18 +1,22 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Eraser, Pen, RotateCcw, Send, X, Palette, Check } from 'lucide-react';
+import { Eraser, Pen, RotateCcw, Send, X, Palette, Check, Eye, ChevronDown, ChevronUp, Layers } from 'lucide-react';
+import { Question } from '../types';
+import { QuestionDiagram } from './QuestionDiagram';
 
 interface CuadernoModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSendDrawing: (dataUrl: string) => void;
   questionTitle?: string;
+  currentQuestion?: Question;
 }
 
 export const CuadernoModal: React.FC<CuadernoModalProps> = ({
   isOpen,
   onClose,
   onSendDrawing,
-  questionTitle = 'Hoja de Trabajo y Análisis'
+  questionTitle = 'Hoja de Trabajo y Análisis',
+  currentQuestion
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [isDrawing, setIsDrawing] = useState(false);
@@ -20,6 +24,7 @@ export const CuadernoModal: React.FC<CuadernoModalProps> = ({
   const [color, setColor] = useState('#1e3a8a'); // Blue ink by default
   const [lineWidth, setLineWidth] = useState(3);
   const [hasContent, setHasContent] = useState(false);
+  const [showDiagramDrawer, setShowDiagramDrawer] = useState(false);
 
   const colors = ['#1e3a8a', '#dc2626', '#16a34a', '#111827', '#9333ea'];
 
@@ -195,6 +200,22 @@ export const CuadernoModal: React.FC<CuadernoModalProps> = ({
               <RotateCcw className="w-3.5 h-3.5" />
               Limpiar
             </button>
+
+            {currentQuestion && (
+              <button
+                onClick={() => setShowDiagramDrawer(prev => !prev)}
+                className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg font-bold transition-colors ml-1 border ${
+                  showDiagramDrawer 
+                    ? 'bg-blue-700 text-white border-blue-800' 
+                    : 'bg-blue-50 text-blue-900 border-blue-200 hover:bg-blue-100'
+                }`}
+                title="Ver figura o gráfico de la pregunta"
+              >
+                <Layers className="w-3.5 h-3.5" />
+                <span>Figura</span>
+                {showDiagramDrawer ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+              </button>
+            )}
           </div>
 
           {/* Color picker */}
@@ -213,6 +234,13 @@ export const CuadernoModal: React.FC<CuadernoModalProps> = ({
             ))}
           </div>
         </div>
+
+        {/* Collapsible Diagram Reference Drawer */}
+        {showDiagramDrawer && currentQuestion && (
+          <div className="bg-slate-100 border-b border-gray-200 p-2 max-h-52 overflow-auto">
+            <QuestionDiagram question={currentQuestion} className="my-0" />
+          </div>
+        )}
 
         {/* Canvas Area */}
         <div className="flex-1 relative bg-white overflow-hidden cursor-crosshair touch-none">

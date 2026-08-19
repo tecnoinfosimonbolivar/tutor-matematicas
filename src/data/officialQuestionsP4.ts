@@ -129,7 +129,7 @@ export const OFFICIAL_GRADE_7_8: Record<number, Question[]> = {
       socraticHints: {
         recordar: '¿Cuánto es la quinta parte (1/5) de 150 km?',
         comprender: 'Si 1/5 son 30 km, ¿cuánto son dos quintas partes (2/5)?',
-        aplicar: 'Calcula en tu libreta: 150 × (2/5) = 300 / 5 = 60 km.',
+        aplicar: 'Calcula en tu cuaderno: 150 × (2/5) = 300 / 5 = 60 km.',
         analizar: '¿Por qué 60 km faltantes y 90 km recorridos completan los 150 km totales?'
       }
     },
@@ -225,7 +225,7 @@ export const OFFICIAL_GRADE_7_8: Record<number, Question[]> = {
       socraticHints: {
         recordar: 'Cuenta cuántas veces aparece la palabra "Quinto" en las listas de los 3 meses.',
         comprender: 'Haz lo mismo para "Sexto" y para "Séptimo".',
-        aplicar: 'Anota en tu libreta: Quinto = 4, Sexto = 8, Séptimo = 6.',
+        aplicar: 'Anota en tu cuaderno: Quinto = 4, Sexto = 8, Séptimo = 6.',
         analizar: '¿Por qué la tabla A consolida con exactitud el total trimestral de inasistencias?'
       }
     },
@@ -449,7 +449,7 @@ export const OFFICIAL_GRADE_7_8: Record<number, Question[]> = {
       socraticHints: {
         recordar: 'Cuenta la frecuencia de cada figura: Muñeca (4), Robot (3), Carro (2), Animal (1).',
         comprender: '¿Cuál figura tiene el mayor número total de apariciones en el experimento?',
-        aplicar: 'Escribe en tu libreta: Moda = Muñeca (4 apariciones de 10).',
+        aplicar: 'Escribe en tu cuaderno: Moda = Muñeca (4 apariciones de 10).',
         analizar: '¿Por qué la mayor frecuencia empírica respalda que la muñeca es el resultado más probable?'
       }
     },
@@ -641,7 +641,7 @@ export const OFFICIAL_GRADE_7_8: Record<number, Question[]> = {
       socraticHints: {
         recordar: 'Si vende 1 perro recibe $2.000. Si vende 2 recibe $4.000. Si vende 10 recibe $20.000.',
         comprender: 'Cuando aumenta la cantidad de perros vendidos, ¿qué le ocurre al dinero recibido?',
-        aplicar: 'Anota en tu libreta: "Proporcionalidad Directa: al multiplicar una magnitud por un número, la otra queda multiplicada por el mismo número".',
+        aplicar: 'Anota en tu cuaderno: "Proporcionalidad Directa: al multiplicar una magnitud por un número, la otra queda multiplicada por el mismo número".',
         analizar: '¿Por qué la relación entre cantidad y dinero es directamente proporcional?'
       }
     }
@@ -741,7 +741,7 @@ export const OFFICIAL_GRADE_7_8: Record<number, Question[]> = {
       socraticHints: {
         recordar: '¿Qué número va primero según la instrucción: columna o fila?',
         comprender: 'Para la silla M: baja la vista a la columna (3) y mira la fila a la izquierda (6).',
-        aplicar: 'Anota en tu libreta: M(3,6), N(4,5), P(6,4), Q(7,3).',
+        aplicar: 'Anota en tu cuaderno: M(3,6), N(4,5), P(6,4), Q(7,3).',
         analizar: '¿Por qué la opción B es la única con el orden (columna, fila) exacto?'
       }
     },
@@ -805,7 +805,7 @@ export const OFFICIAL_GRADE_7_8: Record<number, Question[]> = {
       socraticHints: {
         recordar: 'Observa detenidamente la parte superior y la parte inferior del estante.',
         comprender: '¿Dónde están ubicados los frascos cilíndricos redondeados?',
-        aplicar: 'Anota en tu libreta: "Parte superior = cilindros; Parte inferior = paralelepípedos".',
+        aplicar: 'Anota en tu cuaderno: "Parte superior = cilindros; Parte inferior = paralelepípedos".',
         analizar: '¿Por qué la afirmación A es incorrecta al ubicar cilindros en la parte inferior?'
       }
     },
@@ -869,7 +869,7 @@ export const OFFICIAL_GRADE_7_8: Record<number, Question[]> = {
       socraticHints: {
         recordar: 'Calcula la fracción de probabilidad para cada color sobre el total de 12 bolas.',
         comprender: 'Compara: Blanco 3/12, Negro 2/12, Rojo 3/12, Verde 4/12.',
-        aplicar: 'Anota en tu libreta: Verde tiene 4/12 = 33.3% (Mayor probabilidad).',
+        aplicar: 'Anota en tu cuaderno: Verde tiene 4/12 = 33.3% (Mayor probabilidad).',
         analizar: '¿Por qué elegir el color verde ofrece mayor ventaja matemática para ganar?'
       }
     },
@@ -933,7 +933,7 @@ export const OFFICIAL_GRADE_7_8: Record<number, Question[]> = {
       socraticHints: {
         recordar: '¿Cuáles dos figuras forman la silueta total?',
         comprender: '¿Cómo se calcula el área del triángulo y la del cuadrado por separado?',
-        aplicar: 'Calcula en tu libreta: A_triángulo = (8 × 12) / 2 = 48 cm²; A_cuadrado = 12 × 12 = 144 cm² -> Total = 192 cm².',
+        aplicar: 'Calcula en tu cuaderno: A_triángulo = (8 × 12) / 2 = 48 cm²; A_cuadrado = 12 × 12 = 144 cm² -> Total = 192 cm².',
         analizar: '¿Por qué el cálculo de Camilo (20 × 12 = 240) añade un triángulo fantasma que no existe en la figura?'
       }
     },
@@ -1061,7 +1061,7 @@ export const OFFICIAL_GRADE_7_8: Record<number, Question[]> = {
       socraticHints: {
         recordar: '¿Qué requisito estadístico define a la "Moda"? (El dato con mayor frecuencia de repetición).',
         comprender: 'Revisa las 4 tablas: ¿en cuál tabla el número 51 aparece repetido más de una vez?',
-        aplicar: 'Anota en tu libreta: Tabla C -> Fernando (51) y Rafael (51) -> Frecuencia = 2 (Moda).',
+        aplicar: 'Anota en tu cuaderno: Tabla C -> Fernando (51) y Rafael (51) -> Frecuencia = 2 (Moda).',
         analizar: '¿Por qué si ningún dato se repite no existe moda?'
       }
     },
@@ -1125,7 +1125,7 @@ export const OFFICIAL_GRADE_7_8: Record<number, Question[]> = {
       socraticHints: {
         recordar: '¿Cuál es la fórmula para calcular el volumen de un prisma rectangular?',
         comprender: 'Multiplica las tres dimensiones: base (1 cm) × profundidad (2 cm) × altura (13 cm).',
-        aplicar: 'Calcula en tu libreta: 1 × 2 = 2; luego 2 × 13 = 26 cm³.',
+        aplicar: 'Calcula en tu cuaderno: 1 × 2 = 2; luego 2 × 13 = 26 cm³.',
         analizar: '¿Por qué la unidad resultante debe ser cúbica (cm³)?'
       }
     },
@@ -1189,7 +1189,7 @@ export const OFFICIAL_GRADE_7_8: Record<number, Question[]> = {
       socraticHints: {
         recordar: '¿Cuánto mide el área de un cuadrado de 2 cm de lado? (2 × 2 = 4 cm²).',
         comprender: 'Si juntas 9 de esos cuadrados, ¿cuál es la superficie total?',
-        aplicar: 'Calcula en tu libreta: 9 fichas × 4 cm²/ficha = 36 cm².',
+        aplicar: 'Calcula en tu cuaderno: 9 fichas × 4 cm²/ficha = 36 cm².',
         analizar: '¿Por qué la suma de las áreas de las 9 fichas produce 36 cm² exactos?'
       }
     },
@@ -1221,7 +1221,7 @@ export const OFFICIAL_GRADE_7_8: Record<number, Question[]> = {
       socraticHints: {
         recordar: 'Compara los valores de la unidad en cada una de las horas.',
         comprender: '¿Cuál es el valor monetario más alto de la gráfica? ($105).',
-        aplicar: 'Anota en tu libreta: 6 p.m. -> $105 (Máximo global).',
+        aplicar: 'Anota en tu cuaderno: 6 p.m. -> $105 (Máximo global).',
         analizar: '¿Por qué el punto más alto del gráfico representa el precio máximo por unidad?'
       }
     },

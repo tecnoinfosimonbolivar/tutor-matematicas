@@ -161,7 +161,7 @@ export const OFFICIAL_GRADE_4_5: Record<number, Question[]> = {
       socraticHints: {
         recordar: '¿Cuántos bombillos tiene Paola, cuántos Lorena y cuántos Juliana?',
         comprender: 'En el eje vertical (Y), verifica la altura de cada barra con su nombre.',
-        aplicar: 'Traza en tu libreta las tres barras: Paola (altura 1), Lorena (altura 10), Juliana (altura 8).',
+        aplicar: 'Traza en tu cuaderno las tres barras: Paola (altura 1), Lorena (altura 10), Juliana (altura 8).',
         analizar: '¿Por qué la gráfica C es la única que mantiene la correspondencia exacta?'
       }
     },
@@ -257,7 +257,7 @@ export const OFFICIAL_GRADE_4_5: Record<number, Question[]> = {
       socraticHints: {
         recordar: '¿Cuánto mide el área de una hoja tipo 2 y cuánto la de tipo 1?',
         comprender: '¿Cómo calculas el área total si juntas 6 hojas de 4 cm² y 3 hojas de 2 cm²?',
-        aplicar: 'Realiza en tu libreta: (6 × 4) + (3 × 2) = 24 + 6 = 30 cm².',
+        aplicar: 'Realiza en tu cuaderno: (6 × 4) + (3 × 2) = 24 + 6 = 30 cm².',
         analizar: '¿Por qué la propiedad aditiva del área nos permite sumar las superficies de las piezas?'
       }
     },
@@ -321,7 +321,7 @@ export const OFFICIAL_GRADE_4_5: Record<number, Question[]> = {
       socraticHints: {
         recordar: 'Cuenta cuántos papelitos hay de cada tarea en el cuadro.',
         comprender: '¿Cuál tarea tiene el menor número de papelitos en la bolsa?',
-        aplicar: 'Anota en tu libreta: Tirar basura = 1 papelito (Mínima probabilidad = 1/9).',
+        aplicar: 'Anota en tu cuaderno: Tirar basura = 1 papelito (Mínima probabilidad = 1/9).',
         analizar: '¿Por qué tener la menor cantidad de casos favorables produce la menor probabilidad?'
       }
     },
@@ -417,7 +417,7 @@ export const OFFICIAL_GRADE_4_5: Record<number, Question[]> = {
       socraticHints: {
         recordar: '¿Cuántos palillos tienen las tres primeras figuras (3, 5, 7)?',
         comprender: '¿Cuál es la regla de formación dada: sumar 2 palillos en cada paso?',
-        aplicar: 'Calcula en tu libreta: 7 + 2 = 9 palillos.',
+        aplicar: 'Calcula en tu cuaderno: 7 + 2 = 9 palillos.',
         analizar: '¿Por qué la secuencia de números impares (3, 5, 7, 9) determina el número de lados del siguiente polígono?'
       }
     },
@@ -609,7 +609,7 @@ export const OFFICIAL_GRADE_4_5: Record<number, Question[]> = {
       socraticHints: {
         recordar: '¿Cuántos cubos hay en la capa de adelante y cuántos en la capa de atrás?',
         comprender: '¿Cómo multiplicas ancho (2) × alto (3) × profundidad (2)?',
-        aplicar: 'Calcula en tu libreta: 2 × 3 × 2 = 12 cubos.',
+        aplicar: 'Calcula en tu cuaderno: 2 × 3 × 2 = 12 cubos.',
         analizar: '¿Por qué no podemos olvidar los cubos ocultos en el interior y respaldo del bloque?'
       }
     },
@@ -641,7 +641,7 @@ export const OFFICIAL_GRADE_4_5: Record<number, Question[]> = {
       socraticHints: {
         recordar: '¿Por cuáles tramos específicos camina Antonio desde su punto de partida hasta la meta?',
         comprender: 'Para encontrar la distancia total de una caminata en dos partes, ¿qué operación realizas?',
-        aplicar: 'Anota en tu libreta: "Distancia total de Antonio = Longitud Tramo 1 + Longitud Tramo 2".',
+        aplicar: 'Anota en tu cuaderno: "Distancia total de Antonio = Longitud Tramo 1 + Longitud Tramo 2".',
         analizar: '¿Por qué la longitud de una trayectoria siempre se obtiene sumando los segmentos recorridos?'
       }
     }
@@ -709,7 +709,7 @@ export const OFFICIAL_GRADE_4_5: Record<number, Question[]> = {
       socraticHints: {
         recordar: '¿Cuántas canciones tocan las 2 bandas nacionales juntas y cuántas las 4 internacionales?',
         comprender: 'Nacionales: 2 × 5 = 10 canciones; Internacionales: 4 × 5 = 20 canciones. ¿Cómo se suman?',
-        aplicar: 'Escribe en tu libreta: Propiedad Distributiva: (a + b) × c = (a × c) + (b × c).',
+        aplicar: 'Escribe en tu cuaderno: Propiedad Distributiva: (a + b) × c = (a × c) + (b × c).',
         analizar: '¿Por qué (2 × 5) + (4 × 5) = 10 + 20 = 30 da exactamente el mismo resultado?'
       }
     },
@@ -1125,7 +1125,7 @@ export const OFFICIAL_GRADE_4_5: Record<number, Question[]> = {
       socraticHints: {
         recordar: '¿Cuántas unidades de mil, centenas, decenas y unidades tiene "Tres mil treinta y tres"?',
         comprender: 'Como no se mencionan centenas ("trescientos"), ¿qué dígito debe ir en la casilla de las centenas?',
-        aplicar: 'Escribe la tabla de posición en tu libreta: UM (3), C (0), D (3), U (3) -> 3.033.',
+        aplicar: 'Escribe la tabla de posición en tu cuaderno: UM (3), C (0), D (3), U (3) -> 3.033.',
         analizar: '¿Por qué el 0 en las centenas es indispensable para mantener el valor de las unidades de mil?'
       }
     },
@@ -1157,7 +1157,7 @@ export const OFFICIAL_GRADE_4_5: Record<number, Question[]> = {
       socraticHints: {
         recordar: 'Compara las cantidades de cada fruta: Manzanas (10), Peras (4), Duraznos (3), Mandarinas (2).',
         comprender: '¿Cuál número es el mayor de todos?',
-        aplicar: 'Anota en tu libreta: Manzanas = 10/19 (Mayor probabilidad).',
+        aplicar: 'Anota en tu cuaderno: Manzanas = 10/19 (Mayor probabilidad).',
         analizar: '¿Por qué más de la mitad de las frutas en la canasta son manzanas?'
       }
     },
@@ -1220,7 +1220,7 @@ export const OFFICIAL_GRADE_4_5: Record<number, Question[]> = {
       },
       socraticHints: {
         recordar: '¿Qué es el perímetro de una figura geométrica plana?',
-        comprender: 'Dibuja la silueta de la casa en tu libreta y anota las 5 medidas de su borde exterior.',
+        comprender: 'Dibuja la silueta de la casa en tu cuaderno y anota las 5 medidas de su borde exterior.',
         aplicar: 'Suma: 20 + 12 + 12 + 14 + 14 = 72 cm.',
         analizar: '¿Por qué el perímetro debe incluir obligatoriamente el suelo de la casa?'
       }

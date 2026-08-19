@@ -65,7 +65,7 @@ export const OFFICIAL_GRADE_3: Record<number, Question[]> = {
       socraticHints: {
         recordar: '¿Cuántos lados y qué forma tiene el espacio en blanco que falta por llenar?',
         comprender: 'Observa la orientación de la esquina del rompecabezas: ¿hacia dónde apunta el ángulo recto?',
-        aplicar: 'Dibuja en tu libreta el rectángulo completo y resalta la pieza faltante.',
+        aplicar: 'Dibuja en tu cuaderno el rectángulo completo y resalta la pieza faltante.',
         analizar: '¿Por qué la pieza D es la única que completa el borde recto del rectángulo?'
       }
     },
@@ -225,7 +225,7 @@ export const OFFICIAL_GRADE_3: Record<number, Question[]> = {
       socraticHints: {
         recordar: '¿Hacia qué lado de la fila está "adelante" (hacia la taquilla o hacia la salida)?',
         comprender: 'Párate mentalmente en la posición de Santiago y avanza dos pasos hacia la taquilla.',
-        aplicar: 'Escribe la secuencia en tu libreta: 1.° Pilar, 2.° Estiven, 3.° Santiago.',
+        aplicar: 'Escribe la secuencia en tu cuaderno: 1.° Pilar, 2.° Estiven, 3.° Santiago.',
         analizar: '¿Por qué avanzar dos puestos adelante nos lleva directamente a Pilar?'
       }
     },
@@ -385,7 +385,7 @@ export const OFFICIAL_GRADE_3: Record<number, Question[]> = {
       socraticHints: {
         recordar: 'Haz el conteo de cada fruta: ¿cuántas naranjas, bananos, piñas y limones hay?',
         comprender: '¿Cuál número es mayor entre 3, 2, 2 y 1?',
-        aplicar: 'Anota en tu libreta: Naranjas = 3 (Mayor cantidad).',
+        aplicar: 'Anota en tu cuaderno: Naranjas = 3 (Mayor cantidad).',
         analizar: '¿Por qué la mayor cantidad de elementos otorga la mayor probabilidad de elección?'
       }
     },
@@ -513,7 +513,7 @@ export const OFFICIAL_GRADE_3: Record<number, Question[]> = {
       socraticHints: {
         recordar: '¿Cuántas monedas pagó en total y cuántas bolas recibió?',
         comprender: '¿Qué número multiplicado por 4 da 8?',
-        aplicar: 'Divide en tu libreta: 8 ÷ 4 = 2.',
+        aplicar: 'Divide en tu cuaderno: 8 ÷ 4 = 2.',
         analizar: '¿Por qué 4 bolas a 2 monedas cada una suman exactamente 8 monedas?'
       }
     },
@@ -609,7 +609,7 @@ export const OFFICIAL_GRADE_3: Record<number, Question[]> = {
       socraticHints: {
         recordar: '¿Cuánto mide el ancho de cada cuadro en la convención de la figura?',
         comprender: 'Cuenta cuántos cuadros separan a Sofía del borde de la tarima.',
-        aplicar: 'Multiplica en tu libreta: 2 cuadros × 100 cm = 200 cm.',
+        aplicar: 'Multiplica en tu cuaderno: 2 cuadros × 100 cm = 200 cm.',
         analizar: '¿Por qué la opción D es la única afirmación matemáticamente exacta?'
       }
     },
@@ -641,7 +641,7 @@ export const OFFICIAL_GRADE_3: Record<number, Question[]> = {
       socraticHints: {
         recordar: '¿Cuántos cubos hay en el primer piso (base) y cuántos en el segundo piso?',
         comprender: '¿Cómo se calcula el volumen multiplicando largo × ancho × alto?',
-        aplicar: 'Calcula en tu libreta: 2 × 2 × 2 = 8.',
+        aplicar: 'Calcula en tu cuaderno: 2 × 2 × 2 = 8.',
         analizar: '¿Por qué para formar un bloque sólido 3D de 2x2x2 se requieren exactamente 8 cubitos?'
       }
     }

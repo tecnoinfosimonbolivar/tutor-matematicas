@@ -1,4 +1,5 @@
 // Comprehensive Parser for Student Onboarding, Grade, and Question Number
+// Strictly validates official grades (3° to 11°) for Mathematics in I.E. Simón Bolívar
 
 export interface ParsedStudentInput {
   name?: string;
@@ -8,9 +9,11 @@ export interface ParsedStudentInput {
   isSwitchingQuestion: boolean;
   missingFields: ('name' | 'grade')[];
   isIdentityMsg: boolean;
+  isUnsupportedGrade: boolean;
+  unsupportedGradeText?: string;
 }
 
-// Map of word representations for question numbers
+// Map of word representations for question numbers (1 to 20)
 const WORD_TO_QUESTION: Record<string, number> = {
   'uno': 1, 'primero': 1, 'primera': 1, 'primer': 1, '1': 1, '01': 1,
   'dos': 2, 'segundo': 2, 'segunda': 2, '2': 2, '02': 2,
@@ -42,6 +45,71 @@ function normalizeText(text: string): string {
     .toLowerCase();
 }
 
+/**
+ * Detects if the student explicitly entered an unsupported grade outside 3°-11°
+ * (e.g. Grado 1°, 2°, 12°, 13°, preescolar, transición, jardín, kinder, párvulos, universidad, etc.)
+ */
+export function detectUnsupportedGrade(text: string): { isUnsupported: boolean; gradeText?: string } {
+  const norm = normalizeText(text);
+
+  // 1. Explicit preschool / kindergarten terms
+  if (/\b(preescolar|transicion|transision|jardin|kinder|parvulos|maternal|cero|guarderia)\b/.test(norm)) {
+    return { isUnsupported: true, gradeText: 'Preescolar / Transición' };
+  }
+
+  // 2. Word forms for 1st and 2nd grade
+  if (/\b(primer\s+grado|primero|primera|grado\s+primero|grado\s+primer|curso\s+primero|en\s+primero|de\s+primero)\b/.test(norm)) {
+    // Make sure it's not "pregunta primero" or "opcion primera"
+    if (!/\b(pregunta\s+primero|opcion\s+primera|de\s+primera)\b/.test(norm)) {
+      return { isUnsupported: true, gradeText: 'Grado 1° (Primero)' };
+    }
+  }
+
+  if (/\b(segundo\s+grado|segunda\s+grado|grado\s+segundo|curso\s+segundo|en\s+segundo|de\s+segundo)\b/.test(norm)) {
+    if (!/\b(pregunta\s+segundo|opcion\s+segunda|en\s+un\s+segundo|segundos)\b/.test(norm)) {
+      return { isUnsupported: true, gradeText: 'Grado 2° (Segundo)' };
+    }
+  }
+
+  // 3. Higher grades outside school (12°, 13°, universidad, etc.)
+  if (/\b(duodecimo|duodecima|grado\s+doce|grado\s+12|12°|12º|12vo|grado\s+13|13°|13º|13vo|universidad|semestre)\b/.test(norm)) {
+    return { isUnsupported: true, gradeText: 'Grados 12° en adelante / Educación Superior' };
+  }
+
+  // 4. Group code checks for unsupported grades (101, 102, 201, 202, 1201, 1202, etc.)
+  const groupCodeMatch = norm.match(/\b(10[1-9]|20[1-9]|120[1-9]|130[1-9])\b/);
+  if (groupCodeMatch) {
+    const code = parseInt(groupCodeMatch[1], 10);
+    if (code >= 100 && code < 200) return { isUnsupported: true, gradeText: 'Grado 1° (Primero)' };
+    if (code >= 200 && code < 300) return { isUnsupported: true, gradeText: 'Grado 2° (Segundo)' };
+    if (code >= 1200) return { isUnsupported: true, gradeText: `Grado ${Math.floor(code / 100)}°` };
+  }
+
+  // 5. Numeric explicit patterns outside 3..11
+  const gradeExplicitNumMatch = norm.match(/(?:del\s+grado|de\s+grado|en\s+el\s+grado|grado|curso|en)\s*[:#]?\s*(\d{1,2})\b/);
+  if (gradeExplicitNumMatch) {
+    const g = parseInt(gradeExplicitNumMatch[1], 10);
+    if (g < 3 && g >= 0) {
+      return { isUnsupported: true, gradeText: `Grado ${g}° (${g === 1 ? 'Primero' : g === 2 ? 'Segundo' : 'Preescolar'})` };
+    }
+    if (g > 11) {
+      return { isUnsupported: true, gradeText: `Grado ${g}°` };
+    }
+  }
+
+  // 6. Suffix patterns for 1° or 2°: "1°", "2°", "1ro", "2do", "12°", "13°"
+  const suffixMatch = norm.match(/\b(1|2|12|13|14|15)\s*(?:°|º|ro|do|vo|mo|to|grade)\b/);
+  if (suffixMatch) {
+    const g = parseInt(suffixMatch[1], 10);
+    return { isUnsupported: true, gradeText: `Grado ${g}°` };
+  }
+
+  return { isUnsupported: false };
+}
+
+/**
+ * Detects supported official grade (3 to 11 only)
+ */
 export function detectGradeFromText(text: string): number | undefined {
   const norm = normalizeText(text);
 
@@ -66,7 +134,7 @@ export function detectGradeFromText(text: string): number | undefined {
     return parseInt(subGroupMatch[1], 10);
   }
 
-  // 3. Word patterns for grades
+  // 3. Word patterns for valid grades (3° to 11°)
   if (/\b(tercero|tercera|tercer grado|grado tercero)\b/.test(norm)) return 3;
   if (/\b(cuarto|cuarta|cuarto grado|grado cuarto)\b/.test(norm)) return 4;
   if (/\b(quinto|quinta|quinto grado|grado quinto)\b/.test(norm)) return 5;
@@ -78,7 +146,7 @@ export function detectGradeFromText(text: string): number | undefined {
   if (/\b(undecimo|undecima|once|undecimo grado|grado undecimo|grado once)\b/.test(norm)) return 11;
 
   // 4. Numeric formats: "grado 7", "7°", "7º", "7mo", "7mo grado", "7to", "7ro", "7do", "en 7"
-  const gradeExplicitNumMatch = norm.match(/(?:grado|curso|en el grado|del grado|en)\s*[:#]?\s*(\d{1,2})\b/);
+  const gradeExplicitNumMatch = norm.match(/(?:del\s+grado|de\s+grado|en\s+el\s+grado|grado|curso|en)\s*[:#]?\s*(\d{1,2})\b/);
   if (gradeExplicitNumMatch) {
     const g = parseInt(gradeExplicitNumMatch[1], 10);
     if (g >= 3 && g <= 11) return g;
@@ -127,40 +195,55 @@ export function detectQuestionNumberFromText(text: string): number | undefined {
   return undefined;
 }
 
+// Set of reserved keywords that cannot constitute a student's personal name
+const RESERVED_WORDS = new Set([
+  'hola', 'buenas', 'buenos', 'tutor', 'profe', 'profesor', 'docente', 'profesora', 
+  'estudiante', 'alumno', 'alumna', 'bolivariano', 'bolivariana', 'simon', 'bolivar', 
+  'colegio', 'institucion', 'pregunta', 'preg', 'punto', 'opcion', 'respuesta', 
+  'grado', 'curso', 'nivel', 'matematicas', 'matematica', 'icfes', 'saber', 
+  'primero', 'primera', 'primer', 'segundo', 'segunda', 'tercero', 'tercera', 'tercer', 
+  'cuarto', 'cuarta', 'quinto', 'quinta', 'sexto', 'sexta', 'septimo', 'séptimo', 'septima', 'séptima', 
+  'octavo', 'octava', 'noveno', 'novena', 'decimo', 'décimo', 'decima', 'décima', 
+  'undecimo', 'undécimo', 'undecima', 'undécima', 'once', 'doce', 'trece', 'catorce', 'quince', 
+  'dieciseis', 'dieciséis', 'diecisiete', 'dieciocho', 'diecinueve', 'veinte', 
+  'recordar', 'comprender', 'aplicar', 'analizar', 'evaluar', 'crear', 
+  'pista', 'ayuda', 'cuaderno', 'libreta', 'si', 'no', 'ok', 'listo', 
+  'empezar', 'iniciar', 'continuar', 'siguiente', 'gracias', 'adios'
+]);
+
 export function detectStudentNameFromText(
   text: string, 
   existingName?: string
 ): string | undefined {
-  const trimmed = text.trim();
+  if (!text) return undefined;
+  let cleaned = text.trim();
 
-  // Pattern 1: Explicit introductions: "soy X", "me llamo X", "mi nombre es X", "nombre: X"
-  const nameExplicitMatch = trimmed.match(/(?:me llamo|mi nombre es|soy|nombre\s*[:=])\s+([A-Za-zÁÉÍÓÚáéíóúñÑ\s]{2,40})/i);
-  if (nameExplicitMatch) {
-    let candidate = nameExplicitMatch[1].trim();
-    // Stop at keywords like "del grado", "de grado", "grado", "curso", "pregunta", "de 7", etc.
-    candidate = candidate.replace(/\b(del\s+grado|de\s+grado|en\s+el\s+grado|grado|curso|pregunta|numero|de|\d+|°).*/i, '').trim();
-    if (candidate.length >= 2 && !/^(tercero|cuarto|quinto|sexto|septimo|octavo|noveno|decimo|undecimo|once)$/i.test(candidate)) {
-      return candidate;
-    }
-  }
+  // 1. Remove introductory greetings / salutations
+  cleaned = cleaned.replace(/^(?:¡*hola!*|buenas\s+tardes|buenos\s+dias|buen\s+dia|buenas|tutor|profe|profesor|profesora|señor|estimado\s+tutor)[,\s:]*/i, '').trim();
 
-  // Pattern 2: Name appears before "GRADO" or "DE GRADO" or "CURSO"
-  const beforeGradeMatch = trimmed.match(/^([A-Za-zÁÉÍÓÚáéíóúñÑ\s]{2,35})\s+(?:del\s+grado|de\s+grado|en\s+el\s+grado|grado|curso|\d+°|pregunta)/i);
-  if (beforeGradeMatch) {
-    let candidate = beforeGradeMatch[1].trim();
-    candidate = candidate.replace(/^(hola|buenas|tutor|profe|profesor|señor|estudiante)\s*,?\s*/i, '').trim();
-    if (candidate.length >= 2 && !['buenas', 'hola', 'tutor', 'estudiante'].includes(candidate.toLowerCase())) {
-      return candidate;
-    }
-  }
+  // 2. Remove explicit identity starter phrases (soy, me llamo, etc.)
+  cleaned = cleaned.replace(/^(?:yo\s+soy|soy|me\s+llamo|mi\s+nombre\s+es|nombre\s*[:=]|estudiante\s*[:=]|alumno\s*[:=])[,\s:]*/i, '').trim();
 
-  // Pattern 3: If no name exists yet, and message is just 1-4 words with letters (e.g. "Harrison Rene Valencia Motta")
-  if (!existingName) {
-    const isCleanName = /^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]{3,40}$/.test(trimmed);
-    const norm = normalizeText(trimmed);
-    const isKeyword = ['opcion', 'pregunta', 'grado', 'tutor', 'hola', 'buenas', 'tercero', 'cuarto', 'quinto', 'sexto', 'septimo', 'octavo', 'noveno', 'decimo', 'undecimo'].some(w => norm.includes(w));
-    if (isCleanName && !isKeyword) {
-      return trimmed;
+  // 3. Cut off everything starting from grade, course, question, group codes, ordinals, or numeric grade indicators
+  const cutPattern = /\b(?:del\s+grado|de\s+grado|en\s+el\s+grado|en\s+grado|del\s+curso|de\s+curso|en\s+el\s+curso|grado|curso|nivel|año|ano|pregunta|preg|punto|ejercicio|numero\s+de\s+pregunta|número\s+de\s+pregunta|num\s+pregunta|num|opcion|opción|tercero|tercera|tercer|cuarto|cuarta|quinto|quinta|sexto|sexta|septimo|séptimo|septima|séptima|octavo|octava|noveno|novena|decimo|décimo|decima|décima|undecimo|undécimo|undecima|undécima|once|primero|primera|primer|segundo|segunda|\d+\s*(?:°|º|ro|do|to|mo|vo|no|grade)|30[1-9]|40[1-9]|50[1-9]|60[1-9]|70[1-9]|80[1-9]|90[1-9]|100[1-9]|110[1-9]|(?:3|4|5|6|7|8|9|10|11)[.\-_][1-9]|en\s+\d+|de\s+\d+)\b.*/i;
+
+  cleaned = cleaned.replace(cutPattern, '').trim();
+
+  // Clean trailing and leading punctuation (commas, colons, hyphens, dots)
+  cleaned = cleaned.replace(/^[,\-.:;]+|[,\-.:;]+$/g, '').trim();
+
+  // 4. Validate if the remaining text is a valid student name (only letters, spaces, hyphens, apostrophes)
+  if (/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s\-']{2,45}$/.test(cleaned)) {
+    const norm = normalizeText(cleaned);
+    const words = norm.split(/\s+/).filter(Boolean);
+
+    // If all words are reserved keywords or invalid, reject
+    const hasValidNameWord = words.some(w => !RESERVED_WORDS.has(w) && w.length >= 2);
+    const isSingleReserved = words.length === 1 && RESERVED_WORDS.has(words[0]);
+
+    if (hasValidNameWord && !isSingleReserved && cleaned.length >= 2) {
+      // Return strictly the isolated student name in uppercase
+      return cleaned.toUpperCase();
     }
   }
 
@@ -171,12 +254,13 @@ export function parseStudentMessage(
   message: string,
   existingProfile?: { name?: string; grade?: number; currentQuestionIndex?: number }
 ): ParsedStudentInput {
+  const unsupportedCheck = detectUnsupportedGrade(message);
   const detectedGrade = detectGradeFromText(message);
   const detectedQuestion = detectQuestionNumberFromText(message);
   const detectedName = detectStudentNameFromText(message, existingProfile?.name);
 
   const finalName = detectedName || existingProfile?.name;
-  const finalGrade = detectedGrade || existingProfile?.grade;
+  const finalGrade = detectedGrade || (unsupportedCheck.isUnsupported ? undefined : existingProfile?.grade);
 
   const missingFields: ('name' | 'grade')[] = [];
   if (!finalName) missingFields.push('name');
@@ -186,6 +270,7 @@ export function parseStudentMessage(
   const isIdentityMsg = Boolean(
     detectedName ||
     detectedGrade !== undefined ||
+    unsupportedCheck.isUnsupported ||
     norm.includes('grado') ||
     norm.includes('curso') ||
     norm.includes('pregunta') ||
@@ -200,11 +285,19 @@ export function parseStudentMessage(
     norm.includes('noveno') ||
     norm.includes('decimo') ||
     norm.includes('undecimo') ||
-    norm.includes('once')
+    norm.includes('once') ||
+    norm.includes('primero') ||
+    norm.includes('segundo')
   );
 
   const isSwitchingQuestion = Boolean(detectedQuestion !== undefined);
-  const isInitialOnboarding = Boolean(!existingProfile?.name || !existingProfile?.grade || detectedGrade || detectedName);
+  const isInitialOnboarding = Boolean(
+    unsupportedCheck.isUnsupported ||
+    !existingProfile?.name || 
+    !existingProfile?.grade || 
+    detectedGrade || 
+    detectedName
+  );
 
   return {
     name: detectedName,
@@ -213,6 +306,9 @@ export function parseStudentMessage(
     isInitialOnboarding,
     isSwitchingQuestion,
     missingFields,
-    isIdentityMsg
+    isIdentityMsg,
+    isUnsupportedGrade: unsupportedCheck.isUnsupported,
+    unsupportedGradeText: unsupportedCheck.gradeText
   };
 }
+

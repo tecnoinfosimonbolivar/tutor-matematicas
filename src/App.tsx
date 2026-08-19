@@ -29,6 +29,7 @@ import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
 import { CuadernoModal } from './components/CuadernoModal';
 import { EvidenceModal } from './components/EvidenceModal';
+import { QuestionDiagram } from './components/QuestionDiagram';
 import { EscudoInstitucional, LogoTecnoInfo } from './components/Branding';
 import { 
   QUESTION_BANK, 
@@ -44,7 +45,13 @@ export default function App() {
   const [studentProfile, setStudentProfile] = useState<StudentProfile>(() => {
     const saved = localStorage.getItem('simon_bolivar_profile');
     if (saved) {
-      try { return JSON.parse(saved); } catch (e) {}
+      try { 
+        const parsed = JSON.parse(saved);
+        if (parsed.name) {
+          parsed.name = parsed.name.toUpperCase().trim();
+        }
+        return parsed; 
+      } catch (e) {}
     }
     return {
       name: '',
@@ -120,7 +127,8 @@ Para iniciar tu entrenamiento y cargar el cuadernillo correspondiente:
   const [speechEnabled, setSpeechEnabled] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
-  const [showQuestionDetails, setShowQuestionDetails] = useState(true);
+  const [showQuestionDetails, setShowQuestionDetails] = useState(false);
+  const [showDiagramPanel, setShowDiagramPanel] = useState(false);
   const [showCuadernoModal, setShowCuadernoModal] = useState(false);
   const [showEvidenceModal, setShowEvidenceModal] = useState(false);
   const [showWelcomeModal, setShowWelcomeModal] = useState(!studentProfile.name);
@@ -162,13 +170,14 @@ Para iniciar tu entrenamiento y cargar el cuadernillo correspondiente:
 
   // Present question formatted according to Socratic instructions
   const presentQuestionInChat = (q: Question, grade: number) => {
+    const sName = (studentProfile.name || 'ESTUDIANTE').toUpperCase();
     const formattedText = `🏛️ *I.E. TÉCNICA SIMÓN BOLÍVAR - IBAGUÉ, TOLIMA*
 *"Ciencia y Virtud: EL CAMINO HACIA UN FUTURO EXITOSO"*
 
-¡Bienvenido(a), **${studentProfile.name || 'Estudiante'}**! He cargado tu cuadernillo de **MATEMÁTICAS** para **Grado ${grade}°** (20 Preguntas Oficiales ICFES).
+¡Bienvenido(a), **${sName}**! He cargado tu cuadernillo de **MATEMÁTICAS** para **Grado ${grade}°** (20 Preguntas Oficiales ICFES).
 
 ⏱️ *TIEMPO DE ESTUDIO RIGUROSO: 15 MINUTOS POR PREGUNTA*
-Para garantizar un aprendizaje significativo y desarrollar tus competencias, debes completar las actividades en tu libreta física siguiendo los 6 pasos de la ruta de aprendizaje antes de avanzar.
+Para garantizar un aprendizaje significativo y desarrollar tus competencias, debes completar las actividades en tu cuaderno de apuntes siguiendo los 6 pasos de la ruta de aprendizaje antes de avanzar.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📌 **PREGUNTA #${q.questionNumber}: ${q.title.toUpperCase()}**
@@ -189,10 +198,10 @@ ${q.statement}
 • **Evidencia evaluada:** ${q.evidence || q.affirmation}
 
 📓 **GUÍA DE ESTUDIO EN TU CUADERNO (15 MINUTOS POR PREGUNTA):**
-✍️ *Realiza en tu libreta física los 6 pasos de la ruta de aprendizaje:*
+✍️ *Realiza en tu cuaderno de apuntes los 6 pasos de la ruta de aprendizaje:*
 1. **Recordar (Nivel 1):** Registra el título, grado, los datos numéricos conocidos y define el concepto matemático central.
 2. **Comprender (Nivel 2):** Resume el problema con tus propias palabras e ilustra la situación con un esquema o dibujo geométrico/gráfico.
-3. **Aplicar (Nivel 3):** Escribe la fórmula o principio y resuelve todas las operaciones matemáticas paso a paso.
+3. **Aplicar (Nivel 3):** Escribe la fórmula o principio y resuelve todas las operaciones matemáticas paso a paso en tu cuaderno.
 4. **Analizar (Nivel 4):** Compara las opciones A, B, C y D; clasifica cada una y explica qué error contiene cada distractor.
 5. **Evaluar (Nivel 5):** Argumenta y defiende por escrito por qué la opción elegida es la única respuesta matemáticamente válida.
 6. **Crear (Nivel 6):** Diseña en tu cuaderno un problema similar variando los datos numéricos o ambientado en Ibagué (Barrio La Pola, Plaza de la 21, Cañón del Combeima) y resuélvelo.
@@ -200,13 +209,13 @@ ${q.statement}
 💬 **¿CÓMO DESEAS INTERACTUAR CON TU TUTOR SOCRÁTICO?**
 1️⃣ Registrar datos y conceptos en tu cuaderno (Nivel 1: Recordar)
 2️⃣ Explicar e ilustrar el problema (Nivel 2: Comprender)
-3️⃣ Resolver y calcular paso a paso en tu libreta (Nivel 3: Aplicar)
+3️⃣ Resolver y calcular paso a paso en tu cuaderno (Nivel 3: Aplicar)
 4️⃣ Comparar y descartar opciones incorrectas (Nivel 4: Analizar)
 5️⃣ Argumentar y defender tu respuesta elegida (Nivel 5: Evaluar)
 6️⃣ Diseñar un problema nuevo con datos variados (Nivel 6: Crear)
 7️⃣ Solicitar una pista socrática orientadora
 
-${studentProfile.name ? studentProfile.name + ', ' : ''}¿cuál de las 4 opciones (**A**, **B**, **C** o **D**) consideras correcta o qué actividad de tu cuaderno deseas revisar primero?`;
+${sName ? sName + ', ' : ''}¿cuál de las 4 opciones (**A**, **B**, **C** o **D**) consideras correcta o qué actividad de tu cuaderno deseas revisar primero?`;
 
     const newMsg: ChatMessage = {
       id: `msg-q-${Date.now()}`,
@@ -299,7 +308,52 @@ ${studentProfile.name ? studentProfile.name + ', ' : ''}¿cuál de las 4 opcione
 
     // Dedicated parser for student intent, name, grade, and question
     const parsed = parseStudentMessage(messageText, studentProfile);
-    let updatedName = parsed.name || studentProfile.name;
+
+    // 0. Handle Unsupported Grade (Grades outside 3°-11°, e.g. 1°, 2°, preescolar, 12°, etc.)
+    if (parsed.isUnsupportedGrade) {
+      const studentMsg: ChatMessage = {
+        id: `msg-student-${Date.now()}`,
+        sender: 'student',
+        text: messageText,
+        imageUrl: attachedImage,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        status: 'sent'
+      };
+
+      const gradeDesc = parsed.unsupportedGradeText || 'el grado indicado';
+      const tutorUnsupportedReply = `⚠️ *AVISO INSTITUCIONAL - ÁREA DE MATEMÁTICAS*
+🏛️ *I.E. TÉCNICA SIMÓN BOLÍVAR - IBAGUÉ, TOLIMA*
+*"Ciencia y Virtud: EL CAMINO HACIA UN FUTURO EXITOSO"*
+
+Estimado(a) estudiante, te informamos que en el área de **MATEMÁTICAS** de la institución contamos únicamente con cuadernillos oficiales estructurados para los grados desde **3° (Tercero) hasta 11° (Undécimo)**.
+
+🚫 *No existe material de estudio ni preguntas oficiales para ${gradeDesc}.*
+
+Por favor, indícanos un grado oficial válido entre **3° y 11°** para cargar tu cuadernillo correspondiente:
+
+1️⃣ ¿Cuál es tu **Nombre completo**?
+2️⃣ ¿En qué **Grado** estás? *(3°, 4°, 5°, 6°, 7°, 8°, 9°, 10°, 11°)*
+3️⃣ ¿En qué **número de pregunta (1 a 20)** deseas iniciar?
+
+💡 *Ejemplo:* 👉 *"Soy Carlos del grado 8 pregunta 1"*`;
+
+      const tutorMsg: ChatMessage = {
+        id: `msg-tutor-${Date.now()}`,
+        sender: 'tutor',
+        text: tutorUnsupportedReply,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        status: 'read'
+      };
+
+      setMessages(prev => [...prev, studentMsg, tutorMsg]);
+      setInputMessage('');
+      if (speechEnabled) {
+        speakText(`Aviso: En Matemáticas solamente contamos con cuadernillos oficiales desde grado tercero hasta undécimo. Por favor indica un grado entre tercero y undécimo.`);
+      }
+      return;
+    }
+
+    let updatedName = (parsed.name || studentProfile.name || '').toUpperCase().trim();
     let updatedGrade = parsed.grade || currentGrade;
 
     if (parsed.grade) {
@@ -328,7 +382,7 @@ ${studentProfile.name ? studentProfile.name + ', ' : ''}¿cuál de las 4 opcione
     // Save updated profile
     setStudentProfile(prev => ({
       ...prev,
-      name: updatedName || prev.name,
+      name: updatedName || (prev.name ? prev.name.toUpperCase().trim() : ''),
       grade: updatedGrade
     }));
 
@@ -457,31 +511,31 @@ ${studentProfile.name ? studentProfile.name + ', ' : ''}¿cuál de las 4 opcione
     if (!currentQuestion) return;
 
     if (actionType === '1' || actionType === 'recordar') {
-      setActiveBloomLevel(1);
+      setActiveCognitiveLevel(1);
       const promptText = `1️⃣ Tutor, ¿cuáles son los datos conocidos, conceptos clave y definiciones que debo registrar en mi cuaderno para Recordar (Nivel 1)?`;
       handleSendMessage(promptText);
     } else if (actionType === '2' || actionType === 'comprender') {
-      setActiveBloomLevel(2);
-      const promptText = `2️⃣ Tutor, ¿cómo debo resumir e ilustrar este problema con un esquema o dibujo gráfico en mi libreta para Comprender (Nivel 2)?`;
+      setActiveCognitiveLevel(2);
+      const promptText = `2️⃣ Tutor, ¿cómo debo resumir e ilustrar este problema con un esquema o dibujo gráfico en mi cuaderno para Comprender (Nivel 2)?`;
       handleSendMessage(promptText);
     } else if (actionType === '3' || actionType === 'aplicar') {
-      setActiveBloomLevel(3);
+      setActiveCognitiveLevel(3);
       const promptText = `3️⃣ Tutor, ¿cuáles operaciones matemáticas y procedimientos paso a paso debo realizar en mi cuaderno para Aplicar (Nivel 3)?`;
       handleSendMessage(promptText);
     } else if (actionType === '4' || actionType === 'analizar') {
-      setActiveBloomLevel(4);
+      setActiveCognitiveLevel(4);
       const promptText = `4️⃣ Tutor, comparemos las 4 opciones (A, B, C y D) para registrar en mi cuaderno el descarte justificado de los distractores (Nivel 4: Analizar).`;
       handleSendMessage(promptText);
     } else if (actionType === '5' || actionType === 'evaluar') {
-      setActiveBloomLevel(5);
+      setActiveCognitiveLevel(5);
       const promptText = `5️⃣ Tutor, ¿cómo defiendo y redacto en mi cuaderno la justificación matemática de por qué mi opción es la única válida (Nivel 5: Evaluar)?`;
       handleSendMessage(promptText);
     } else if (actionType === '6' || actionType === 'crear') {
-      setActiveBloomLevel(6);
+      setActiveCognitiveLevel(6);
       const promptText = `6️⃣ Tutor, propónme una variación de este problema en contexto de Ibagué o Tolima para diseñar y resolver un nuevo reto en mi cuaderno (Nivel 6: Crear).`;
       handleSendMessage(promptText);
     } else if (actionType === '7' || actionType === 'pista') {
-      const promptText = `7️⃣ Tutor, dame una pista socrática orientadora que me ayude a avanzar en el análisis de mi libreta.`;
+      const promptText = `7️⃣ Tutor, dame una pista socrática orientadora que me ayude a avanzar en el análisis de mi cuaderno.`;
       handleSendMessage(promptText);
     } else if (actionType === 'siguiente') {
       const nextQNum = (currentQuestion.questionNumber % 20) + 1;
@@ -495,7 +549,7 @@ ${studentProfile.name ? studentProfile.name + ', ' : ''}¿cuál de las 4 opcione
 
   // Save student profile from modal
   const handleSaveProfile = () => {
-    const nameToSave = tempName.trim() || 'Estudiante Bolivariano';
+    const nameToSave = (tempName.trim() || 'ESTUDIANTE BOLIVARIANO').toUpperCase();
     setStudentProfile(prev => ({
       ...prev,
       name: nameToSave,
@@ -511,33 +565,98 @@ ${studentProfile.name ? studentProfile.name + ', ' : ''}¿cuál de las 4 opcione
     }
   };
 
-  // Format markdown helper (bold *text*, line breaks, emojis)
+  // Format markdown helper (bold, lists, options A-D, dividers, emojis)
   const renderMessageContent = (text: string) => {
     const lines = text.split('\n');
     return (
-      <div className="space-y-1.5 text-[13px] leading-relaxed break-words">
+      <div className="space-y-2 text-[14px] sm:text-[15px] leading-relaxed text-gray-900 break-words">
         {lines.map((line, idx) => {
-          if (!line.trim()) return <div key={idx} className="h-1" />;
+          const trimmed = line.trim();
+          if (!trimmed) return <div key={idx} className="h-1.5" />;
 
-          // Parse bold markdown *bold*
-          const parts = line.split(/(\*[^*]+\*)/g);
+          // Line separator ━━━━━━━━━
+          if (/^[━─—_=*-]{4,}$/.test(trimmed)) {
+            return <hr key={idx} className="border-t border-gray-200 my-2 opacity-80" />;
+          }
+
+          // Option lines: **A.** or **B.** or A. or B.
+          const isOptionLine = /^\*?\*?([A-D])\.\*?\*?\s+(.*)/i.exec(trimmed);
+          if (isOptionLine) {
+            const letter = isOptionLine[1].toUpperCase();
+            const content = isOptionLine[2];
+            return (
+              <div 
+                key={idx}
+                className="flex items-start gap-2.5 p-2 rounded-xl bg-blue-50/70 border border-blue-100 my-1 hover:bg-blue-50 transition-colors"
+              >
+                <span className="w-6 h-6 rounded-lg bg-[#1a365d] text-white font-extrabold text-xs flex items-center justify-center shrink-0 shadow-xs mt-0.5">
+                  {letter}
+                </span>
+                <div className="text-gray-900 font-medium leading-snug flex-1">
+                  {parseBoldMarkdown(content)}
+                </div>
+              </div>
+            );
+          }
+
+          // Question header: 📌 **PREGUNTA...
+          if (trimmed.startsWith('📌')) {
+            return (
+              <div key={idx} className="p-2.5 rounded-xl bg-blue-900 text-white font-extrabold text-xs sm:text-sm shadow-xs flex items-center gap-2 my-1.5">
+                <span>📌</span>
+                <span className="tracking-wide uppercase">{trimmed.replace(/^📌\s*/, '').replace(/\*\*/g, '')}</span>
+              </div>
+            );
+          }
+
+          // Section headers like 📖 **ENUNCIADO:** or 📓 **GUÍA...
+          if (/^(📖|🔘|📋|📓|💬|⏱️|⚠️|💡|🚫)\s*\*\*/.test(trimmed)) {
+            return (
+              <div key={idx} className="text-xs sm:text-sm font-black text-[#1a365d] pt-1 pb-0.5 flex items-center gap-1.5 border-b border-blue-100/80">
+                {parseBoldMarkdown(trimmed)}
+              </div>
+            );
+          }
+
+          // Numbered bullet items like 1️⃣, 2️⃣, 1., 2.
+          if (/^([1-7]️⃣|\d+\.)\s+/.test(trimmed)) {
+            return (
+              <div key={idx} className="flex items-start gap-2 pl-1 my-0.5 leading-snug text-gray-800">
+                <span className="font-bold text-blue-900 shrink-0">
+                  {trimmed.split(' ')[0]}
+                </span>
+                <div className="flex-1">
+                  {parseBoldMarkdown(trimmed.substring(trimmed.indexOf(' ') + 1))}
+                </div>
+              </div>
+            );
+          }
+
+          // Standard paragraph line
           return (
-            <p key={idx} className="leading-snug">
-              {parts.map((part, pIdx) => {
-                if (part.startsWith('*') && part.endsWith('*')) {
-                  return (
-                    <strong key={pIdx} className="font-bold text-inherit">
-                      {part.slice(1, -1)}
-                    </strong>
-                  );
-                }
-                return part;
-              })}
+            <p key={idx} className="leading-relaxed">
+              {parseBoldMarkdown(line)}
             </p>
           );
         })}
       </div>
     );
+  };
+
+  // Helper to parse bold markdown **text** or *text*
+  const parseBoldMarkdown = (text: string) => {
+    const parts = text.split(/(\*\*?[^*]+?\*\*?)/g);
+    return parts.map((part, pIdx) => {
+      if ((part.startsWith('**') && part.endsWith('**')) || (part.startsWith('*') && part.endsWith('*'))) {
+        const clean = part.replace(/^\*+|\*+$/g, '');
+        return (
+          <strong key={pIdx} className="font-extrabold text-[#1a365d]">
+            {clean}
+          </strong>
+        );
+      }
+      return part;
+    });
   };
 
   return (
@@ -638,11 +757,27 @@ ${studentProfile.name ? studentProfile.name + ', ' : ''}¿cuál de las 4 opcione
 
                 {currentQuestion && (
                   <button
+                    onClick={() => setShowDiagramPanel(!showDiagramPanel)}
+                    className={`flex items-center gap-1 text-[11px] font-bold px-2 py-1 rounded-lg border shadow-xs transition-colors ${
+                      showDiagramPanel
+                        ? 'bg-amber-100 border-amber-300 text-amber-900'
+                        : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
+                    }`}
+                    title="Ver figura, tabla o gráfico interactivo de la pregunta"
+                  >
+                    <Layers className="w-3.5 h-3.5 text-blue-700" />
+                    <span className="hidden sm:inline">Figura</span>
+                    {showDiagramPanel ? <ChevronUp className="w-3 h-3 ml-0.5" /> : <ChevronDown className="w-3 h-3 ml-0.5" />}
+                  </button>
+                )}
+
+                {currentQuestion && (
+                  <button
                     onClick={() => setShowQuestionDetails(!showQuestionDetails)}
                     className="flex items-center gap-1 text-[11px] font-bold px-2 py-1 rounded-lg bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-xs transition-colors"
                     title="Ver detalles de la pregunta y competencias"
                   >
-                    <Layers className="w-3.5 h-3.5 text-blue-700" />
+                    <FileText className="w-3.5 h-3.5 text-blue-700" />
                     <span className="hidden sm:inline">Ficha</span>
                     {showQuestionDetails ? <ChevronUp className="w-3 h-3 ml-0.5" /> : <ChevronDown className="w-3 h-3 ml-0.5" />}
                   </button>
@@ -689,6 +824,25 @@ ${studentProfile.name ? studentProfile.name + ', ' : ''}¿cuál de las 4 opcione
               </div>
             )}
           </div>
+
+          {/* Top Interactive Diagram Reference Banner */}
+          {showDiagramPanel && currentQuestion && (
+            <div className="bg-slate-50 border-b border-blue-200/90 p-3 z-10 shrink-0 animate-in slide-in-from-top-2 duration-200 shadow-inner">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-bold text-[#1a365d] flex items-center gap-1.5">
+                  <Layers className="w-4 h-4 text-blue-700" />
+                  Figura / Gráfico Oficial - Pregunta #{currentQuestion.questionNumber}
+                </span>
+                <button
+                  onClick={() => setShowDiagramPanel(false)}
+                  className="text-xs text-gray-500 hover:text-gray-800 px-2 py-0.5 rounded border bg-white"
+                >
+                  Ocultar
+                </button>
+              </div>
+              <QuestionDiagram question={currentQuestion} onOpenCuaderno={() => setShowCuadernoModal(true)} />
+            </div>
+          )}
 
           {/* Optional Collapsible Technical Badge for Active Question */}
           {showQuestionDetails && currentQuestion && (
@@ -742,10 +896,10 @@ ${studentProfile.name ? studentProfile.name + ', ' : ''}¿cuál de las 4 opcione
                   )}
 
                   <div
-                    className={`max-w-[85%] md:max-w-[75%] rounded-2xl p-3 md:p-3.5 shadow-sm relative text-[#1c1e21] transition-all ${
+                    className={`max-w-[94%] sm:max-w-[85%] md:max-w-[78%] rounded-2xl p-3.5 sm:p-4 shadow-sm relative text-[#1c1e21] transition-all ${
                       isStudent
-                        ? 'bg-[#d9fdd3] rounded-br-xs border border-green-200/60'
-                        : 'bg-white rounded-bl-xs border border-gray-200/80'
+                        ? 'bg-[#d9fdd3] rounded-br-xs border border-green-300/80 shadow-xs'
+                        : 'bg-white rounded-bl-xs border border-gray-200/90 shadow-xs'
                     }`}
                   >
                     {/* Tutor Header Badge */}
@@ -755,6 +909,16 @@ ${studentProfile.name ? studentProfile.name + ', ' : ''}¿cuál de las 4 opcione
                           🏛️ Tutor Socrático
                         </span>
                         <span className="text-gray-400 font-medium">I.E. Simón Bolívar</span>
+                      </div>
+                    )}
+
+                    {/* Interactive Vector Diagram for Questions in Chat Stream */}
+                    {isTutor && currentQuestion && (msg.text.includes('PREGUNTA #') || msg.text.includes('ENUNCIADO:') || msg.text.includes('FICHA PEDAGÓGICA')) && (
+                      <div className="mb-3">
+                        <QuestionDiagram 
+                          question={currentQuestion} 
+                          onOpenCuaderno={() => setShowCuadernoModal(true)} 
+                        />
                       </div>
                     )}
 
@@ -863,7 +1027,7 @@ ${studentProfile.name ? studentProfile.name + ', ' : ''}¿cuál de las 4 opcione
                 <button
                   onClick={() => handleRequestPedagogicalAction('aplicar')}
                   className="px-2.5 py-1 rounded-full text-xs font-medium bg-white hover:bg-blue-50 border border-gray-300 text-gray-800 shrink-0 transition-colors flex items-center gap-1 shadow-xs"
-                  title="3️⃣ Calcular operaciones paso a paso en libreta (Aplicar)"
+                  title="3️⃣ Calcular operaciones paso a paso en cuaderno (Aplicar)"
                 >
                   <span className="font-bold text-blue-700">3️⃣</span>
                   <span>Aplicar</span>
@@ -988,6 +1152,7 @@ ${studentProfile.name ? studentProfile.name + ', ' : ''}¿cuál de las 4 opcione
           handleSendMessage('', dataUrl);
         }}
         questionTitle={currentQuestion ? `Pregunta #${currentQuestion.questionNumber}: ${currentQuestion.title}` : 'Hoja de Trabajo y Operaciones'}
+        currentQuestion={currentQuestion || undefined}
       />
 
       {/* 4. Evidence Report Modal */}
@@ -1027,9 +1192,9 @@ ${studentProfile.name ? studentProfile.name + ', ' : ''}¿cuál de las 4 opcione
                 <input
                   type="text"
                   value={tempName}
-                  onChange={(e) => setTempName(e.target.value)}
-                  placeholder="Ej: Laura Sofía Vargas"
-                  className="w-full text-sm px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none"
+                  onChange={(e) => setTempName(e.target.value.toUpperCase())}
+                  placeholder="EJ: LAURA SOFÍA VARGAS"
+                  className="w-full text-sm px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none uppercase font-semibold"
                   autoFocus
                 />
               </div>

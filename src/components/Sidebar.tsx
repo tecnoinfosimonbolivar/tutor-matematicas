@@ -48,8 +48,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
             {studentName ? studentName.charAt(0).toUpperCase() : 'SB'}
           </div>
           <div className="min-w-0">
-            <h4 className="text-xs font-bold text-gray-900 truncate">
-              {studentName || 'Estudiante Bolivariano'}
+            <h4 className="text-xs font-bold text-gray-900 truncate uppercase">
+              {(studentName || 'ESTUDIANTE BOLIVARIANO').toUpperCase()}
             </h4>
             <p className="text-[10px] text-blue-700 font-semibold flex items-center gap-1">
               <span className="w-1.5 h-1.5 rounded-full bg-blue-600"></span>

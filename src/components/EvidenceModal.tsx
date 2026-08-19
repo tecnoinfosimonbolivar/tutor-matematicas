@@ -40,12 +40,13 @@ export const EvidenceModal: React.FC<EvidenceModalProps> = ({
     });
   };
 
+  const sName = (studentName || 'ESTUDIANTE BOLIVARIANO').toUpperCase();
   const evidenceSummaryText = `===========================================
 I.E. TÉCNICA SIMÓN BOLÍVAR - IBAGUÉ, TOLIMA
 "Ciencia y Virtud: EL CAMINO HACIA UN FUTURO EXITOSO"
 Área: MATEMÁTICAS - PREPARACIÓN SABER 11
 ===========================================
-ESTUDIANTE: ${studentName || 'Estudiante'}
+ESTUDIANTE: ${sName}
 GRADO: ${grade ? grade + '°' : 'No registrado'}
 FECHA DE ENTRENAMIENTO: ${currentDate}
 PREGUNTAS COMPLETADAS: ${solvedCount} preguntas
@@ -102,7 +103,7 @@ PLATAFORMA INSTITUCIONAL: ${schoolPortalUrl}
                   ¡Bloque de 4 Preguntas Completado!
                 </h4>
                 <p className="text-xs text-emerald-700">
-                  Estudiante: <span className="font-semibold">{studentName || 'Bolivariano'}</span> ({grade ? `${grade}° Grado` : 'Matemáticas'})
+                  Estudiante: <span className="font-semibold uppercase">{sName}</span> ({grade ? `${grade}° Grado` : 'Matemáticas'})
                 </p>
               </div>
             </div>

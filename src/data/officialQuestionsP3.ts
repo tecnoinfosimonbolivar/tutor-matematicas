@@ -32,7 +32,7 @@ export const OFFICIAL_GRADE_6_7_8: Record<number, Question[]> = {
       },
       socraticHints: {
         recordar: 'Si el reloj marcó 3 minutos de más, ¿qué operación debes aplicar a cada tiempo?',
-        comprender: 'Calcula: 26 - 3 = ?, 27 - 3 = ?, 29 - 3 = ? en tu libreta.',
+        comprender: 'Calcula: 26 - 3 = ?, 27 - 3 = ?, 29 - 3 = ? en tu cuaderno.',
         aplicar: 'Asigna cada tiempo resultante a su posición en el podio: 1.°, 2.° y 3.°. ',
         analizar: '¿Por qué el ciclista en el puesto 1 debe conservar el menor tiempo corregido (23 min)?'
       }
@@ -129,7 +129,7 @@ export const OFFICIAL_GRADE_6_7_8: Record<number, Question[]> = {
       socraticHints: {
         recordar: '¿En qué carrera y calle está la iglesia y en cuáles el hospital?',
         comprender: 'Calcula la diferencia de carreras (6 a 3) y de calles (7 a 12).',
-        aplicar: 'Anota en tu libreta: Carrera 6 -> 3 = 3 carreras al Sur; Calle 7 -> 12 = 5 calles al Oriente.',
+        aplicar: 'Anota en tu cuaderno: Carrera 6 -> 3 = 3 carreras al Sur; Calle 7 -> 12 = 5 calles al Oriente.',
         analizar: '¿Por qué este vector de desplazamiento conecta con precisión ambos puntos?'
       }
     },
@@ -193,7 +193,7 @@ export const OFFICIAL_GRADE_6_7_8: Record<number, Question[]> = {
       socraticHints: {
         recordar: '¿Cuál eje representa los puntos de atención y cuál los vendedores?',
         comprender: 'Ubica el número 8 en el eje horizontal y sube en línea vertical hasta tocar el punto.',
-        aplicar: 'Anota la coordenada en tu libreta: (8, 16).',
+        aplicar: 'Anota la coordenada en tu cuaderno: (8, 16).',
         analizar: '¿Por qué la constante de proporcionalidad k = 16/8 = 2 se cumple para todos los puntos?'
       }
     },
@@ -321,7 +321,7 @@ export const OFFICIAL_GRADE_6_7_8: Record<number, Question[]> = {
       socraticHints: {
         recordar: '¿Cuántos grados gira la figura en cada paso?',
         comprender: 'Si en la posición 3 está horizontal (90°), ¿cuánto es 90° + 45°?',
-        aplicar: 'Dibuja en tu libreta el reloj y marca los giros: 12:00 -> 1:30 -> 3:00 -> 4:30.',
+        aplicar: 'Dibuja en tu cuaderno el reloj y marca los giros: 12:00 -> 1:30 -> 3:00 -> 4:30.',
         analizar: '¿Por qué la opción A es la única con la inclinación exacta de 135°?'
       }
     },
@@ -385,7 +385,7 @@ export const OFFICIAL_GRADE_6_7_8: Record<number, Question[]> = {
       socraticHints: {
         recordar: '¿Cuántos paquetes de 100 litros hay en 400 litros? (400 ÷ 100 = 4).',
         comprender: 'Si cada paquete de 100 litros rinde para 2 días, ¿cuánto rinden 4 paquetes?',
-        aplicar: 'Calcula en tu libreta: 4 × 2 días = 8 días.',
+        aplicar: 'Calcula en tu cuaderno: 4 × 2 días = 8 días.',
         analizar: '¿Por qué 400 L rinden exactamente 4 veces más que 100 L?'
       }
     },
@@ -449,7 +449,7 @@ export const OFFICIAL_GRADE_6_7_8: Record<number, Question[]> = {
       socraticHints: {
         recordar: '¿Qué condiciones exige la palabra "congruente" en geometría plana?',
         comprender: 'Compara la longitud del vástago y el tamaño del anillo circular en cada estuche.',
-        aplicar: 'Dibuja la silueta de la llave en tu libreta y compárala con el estuche A.',
+        aplicar: 'Dibuja la silueta de la llave en tu cuaderno y compárala con el estuche A.',
         analizar: '¿Por qué el estuche A es el único con dimensiones idénticas?'
       }
     },
@@ -481,7 +481,7 @@ export const OFFICIAL_GRADE_6_7_8: Record<number, Question[]> = {
       socraticHints: {
         recordar: '¿Qué indica el numerador (3) y qué indica el denominador (16)?',
         comprender: 'Cuenta los cuadritos azules en cada figura de las opciones.',
-        aplicar: 'Dibuja en tu libreta la cuadrícula 4x4 y colorea 3 cuadritos.',
+        aplicar: 'Dibuja en tu cuaderno la cuadrícula 4x4 y colorea 3 cuadritos.',
         analizar: '¿Por qué la opción B cumple exactamente con 3 partes sombreadas de 16 totales?'
       }
     },
@@ -545,7 +545,7 @@ export const OFFICIAL_GRADE_6_7_8: Record<number, Question[]> = {
       socraticHints: {
         recordar: 'Compara la Figura 1 completa con la Figura 2 incompleta.',
         comprender: '¿Qué contorno tiene exactamente el espacio en blanco de arriba?',
-        aplicar: 'Dibuja la pieza faltante en tu libreta y compárala con la opción A.',
+        aplicar: 'Dibuja la pieza faltante en tu cuaderno y compárala con la opción A.',
         analizar: '¿Por qué la opción A encaja perfectamente sin dejar vacíos ni sobreponerse?'
       }
     },
@@ -641,7 +641,7 @@ export const OFFICIAL_GRADE_6_7_8: Record<number, Question[]> = {
       socraticHints: {
         recordar: '¿Cuántas tajadas de jamón tiene Alejandro en total (8)?',
         comprender: '¿Cuáles dos números multiplicados dan 8 además de 2 × 4?',
-        aplicar: 'Escribe en tu libreta: 4 sándwiches × 2 tajadas = 8 tajadas.',
+        aplicar: 'Escribe en tu cuaderno: 4 sándwiches × 2 tajadas = 8 tajadas.',
         analizar: '¿Por qué la propiedad conmutativa de la multiplicación (2×4 = 4×2 = 8) asegura la igualdad?'
       }
     }

@@ -29,119 +29,114 @@ export const Header: React.FC<HeaderProps> = ({
   onResetProfile
 }) => {
   return (
-    <header className="flex flex-col md:flex-row items-stretch md:items-center justify-between bg-[#1a365d] px-4 md:px-6 py-2.5 md:py-3 text-white shadow-lg z-30 shrink-0 border-b border-blue-900/50 gap-2">
-      {/* Left branding */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-3">
+    <header className="bg-[#1a365d] text-white shadow-md z-30 shrink-0 border-b border-blue-900/60 px-3 py-2 md:px-5 md:py-2.5">
+      <div className="flex items-center justify-between gap-2 max-w-7xl mx-auto">
+        {/* Left: Menu toggle (mobile) + Shield + Clear Title */}
+        <div className="flex items-center gap-2.5 min-w-0">
           <button 
             onClick={onToggleMobileSidebar}
-            className="md:hidden p-1.5 rounded-lg bg-blue-900/60 text-white hover:bg-blue-800"
-            title="Abrir menú y competencias"
+            className="md:hidden p-2 rounded-lg bg-blue-900/80 text-white hover:bg-blue-800 active:scale-95 transition-transform"
+            title="Abrir menú de preguntas y competencias"
+            aria-label="Abrir menú"
           >
             <Menu className="w-5 h-5" />
           </button>
           
-          <EscudoInstitucional size={42} className="bg-white/95" />
+          <div className="shrink-0">
+            <EscudoInstitucional size={38} className="bg-white shadow-xs" />
+          </div>
           
-          <div>
-            <h1 className="text-sm md:text-base font-black leading-tight uppercase tracking-tight text-white flex items-center gap-1.5">
-              I.E. Técnica Simón Bolívar
+          <div className="min-w-0">
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <h1 className="text-xs sm:text-sm md:text-base font-black leading-tight tracking-tight uppercase text-white truncate">
+                I.E. Técnica Simón Bolívar
+              </h1>
               <span className="hidden sm:inline-block text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-500/30 text-blue-200 border border-blue-400/30">
                 Ibagué
               </span>
-            </h1>
-            <p className="text-[10px] text-blue-200/90 italic font-medium">
-              "Ciencia y Virtud: EL CAMINO HACIA UN FUTURO EXITOSO"
+            </div>
+            <p className="text-[10px] sm:text-[11px] text-amber-300 font-semibold truncate leading-tight">
+              Tutor Socrático de MATEMÁTICAS <span className="text-blue-200 font-normal hidden xs:inline">• Grados 3° a 11°</span>
             </p>
           </div>
         </div>
 
-        {/* Mobile Status badge */}
-        <div className="md:hidden flex items-center gap-1.5 bg-blue-950/60 px-2.5 py-1 rounded-full border border-blue-400/20 text-[10px]">
-          <span className="h-2 w-2 rounded-full bg-green-400 animate-pulse"></span>
-          <span className="font-semibold text-green-300">{studentName || 'En Línea'}</span>
-        </div>
-      </div>
+        {/* Right: Grade Selector & Quick Action Tools */}
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          {/* Student Profile identifier */}
+          {studentName && (
+            <button
+              onClick={onResetProfile}
+              className="hidden lg:flex items-center gap-1 bg-blue-950/70 hover:bg-blue-900 px-2.5 py-1.5 rounded-lg border border-blue-400/30 text-xs text-blue-100 font-semibold transition-colors"
+              title="Cambiar datos de estudiante"
+            >
+              <span className="text-amber-300 font-bold max-w-[120px] truncate uppercase">👤 {studentName.toUpperCase()}</span>
+              <RefreshCw className="w-3 h-3 text-blue-300 ml-1 opacity-70" />
+            </button>
+          )}
 
-      {/* Middle Controls: Grade Quick Select & Actions */}
-      <div className="flex items-center justify-between md:justify-end gap-2 flex-wrap">
-        {/* Student Profile identifier */}
-        {studentName && (
-          <button
-            onClick={onResetProfile}
-            className="hidden lg:flex items-center gap-1 bg-blue-950/60 hover:bg-blue-900 px-2.5 py-1 rounded-lg border border-blue-400/30 text-xs text-blue-100 font-semibold transition-colors"
-            title="Cambiar datos de estudiante"
-          >
-            <span className="text-amber-300 font-bold">👤 {studentName}</span>
-            <RefreshCw className="w-3 h-3 text-blue-300 ml-1 opacity-70" />
-          </button>
-        )}
-
-        {/* Grade picker */}
-        <div className="flex items-center bg-blue-950/70 rounded-lg p-1 border border-blue-400/30">
-          <GraduationCap className="w-3.5 h-3.5 text-blue-300 ml-1.5 mr-1" />
-          <span className="text-[11px] font-bold text-blue-200 mr-1.5">Grado:</span>
-          <select
-            value={currentGrade || ''}
-            onChange={(e) => {
-              if (e.target.value) {
-                onSelectGrade(Number(e.target.value));
-              }
-            }}
-            className="bg-[#1a365d] text-white text-xs font-bold rounded px-2 py-1 outline-none border border-blue-400/40 cursor-pointer focus:ring-1 focus:ring-blue-300"
-          >
-            <option value="" disabled>Seleccionar...</option>
-            {GRADES_AVAILABLE.map((g) => (
-              <option key={g} value={g} className="bg-slate-900 text-white font-medium">
-                {g}° Grado {g >= 10 ? '(Media)' : g >= 6 ? '(Secundaria)' : '(Primaria)'}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Cuaderno Digital button */}
-        <button
-          onClick={onOpenCuaderno}
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600/80 hover:bg-blue-600 text-white rounded-lg text-xs font-bold transition-colors border border-blue-400/40 shadow-sm"
-          title="Abrir cuaderno digital de dibujo y operaciones"
-        >
-          <BookOpen className="w-3.5 h-3.5" />
-          <span className="hidden sm:inline">Cuaderno</span>
-        </button>
-
-        {/* Evidence report button */}
-        <button
-          onClick={onOpenEvidence}
-          className="flex items-center gap-1 px-3 py-1.5 bg-emerald-700/80 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition-colors border border-emerald-400/40 shadow-sm"
-          title="Ver registro de evidencias y enlace institucional"
-        >
-          <Award className="w-3.5 h-3.5 text-emerald-300" />
-          <span className="hidden sm:inline">Evidencias</span>
-          <span className="bg-emerald-950/60 px-1 rounded text-[10px] ml-0.5">{solvedCount}</span>
-        </button>
-
-        {/* Voice TTS Toggle */}
-        <button
-          onClick={onToggleSpeech}
-          className={`p-1.5 rounded-lg border transition-colors ${
-            speechEnabled
-              ? 'bg-amber-500/20 text-amber-300 border-amber-400/40'
-              : 'bg-blue-950/50 text-gray-400 border-blue-400/20 hover:text-white'
-          }`}
-          title={speechEnabled ? 'Voz Socrática Activada (Lectura en voz alta)' : 'Activar lectura por voz'}
-        >
-          {speechEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
-        </button>
-
-        {/* Desktop Status */}
-        <div className="hidden md:block text-right pl-2 border-l border-blue-800">
-          <span className="block text-[11px] font-extrabold uppercase tracking-wider text-amber-300">
-            Área de MATEMÁTICAS
-          </span>
-          <div className="flex items-center justify-end space-x-1.5 mt-0.5">
-            <span className="h-2 w-2 rounded-full bg-green-400 animate-pulse"></span>
-            <span className="text-[10px] font-medium text-blue-100">Tutor Socrático En Línea</span>
+          {/* Grade picker (Only 3° to 11°) */}
+          <div className="flex items-center bg-blue-950/90 rounded-lg px-2 py-1 border border-blue-400/40 shadow-xs">
+            <GraduationCap className="w-4 h-4 text-amber-300 shrink-0 mr-1" />
+            <label htmlFor="grade-select" className="text-[11px] font-bold text-blue-200 mr-1 hidden sm:inline">
+              Grado:
+            </label>
+            <select
+              id="grade-select"
+              value={currentGrade || ''}
+              onChange={(e) => {
+                if (e.target.value) {
+                  onSelectGrade(Number(e.target.value));
+                }
+              }}
+              className="bg-[#1a365d] text-white text-xs sm:text-xs font-black rounded px-2 py-1 outline-none border border-blue-400/50 cursor-pointer focus:ring-1 focus:ring-amber-400"
+              title="Selecciona tu grado (3° a 11°)"
+            >
+              <option value="" disabled>Grado...</option>
+              {GRADES_AVAILABLE.map((g) => (
+                <option key={g} value={g} className="bg-slate-900 text-white font-semibold">
+                  {g}° {g >= 10 ? 'Media' : g >= 6 ? 'Sec.' : 'Prim.'}
+                </option>
+              ))}
+            </select>
           </div>
+
+          {/* Cuaderno Digital button */}
+          <button
+            onClick={onOpenCuaderno}
+            className="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-bold transition-all active:scale-95 border border-blue-400/40 shadow-xs"
+            title="Abrir cuaderno digital de dibujo y operaciones"
+          >
+            <BookOpen className="w-3.5 h-3.5 text-blue-100" />
+            <span className="hidden sm:inline">Cuaderno</span>
+          </button>
+
+          {/* Evidence report button */}
+          <button
+            onClick={onOpenEvidence}
+            className="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 bg-emerald-700 hover:bg-emerald-600 text-white rounded-lg text-xs font-bold transition-all active:scale-95 border border-emerald-400/40 shadow-xs"
+            title="Ver registro de evidencias y portal institucional"
+          >
+            <Award className="w-3.5 h-3.5 text-emerald-200" />
+            <span className="hidden sm:inline">Evidencias</span>
+            <span className="bg-emerald-950/80 text-emerald-200 font-extrabold px-1.5 py-0.2 rounded text-[10px]">
+              {solvedCount}
+            </span>
+          </button>
+
+          {/* Voice TTS Toggle */}
+          <button
+            onClick={onToggleSpeech}
+            className={`p-1.5 sm:p-2 rounded-lg border transition-all active:scale-95 ${
+              speechEnabled
+                ? 'bg-amber-500 text-slate-950 border-amber-300 font-bold shadow-xs'
+                : 'bg-blue-950/70 text-blue-200 border-blue-400/30 hover:text-white hover:bg-blue-900'
+            }`}
+            title={speechEnabled ? 'Voz Socrática Activada' : 'Activar lectura por voz'}
+            aria-label={speechEnabled ? 'Desactivar voz' : 'Activar voz'}
+          >
+            {speechEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+          </button>
         </div>
       </div>
     </header>
